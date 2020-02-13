@@ -1,5 +1,5 @@
-import { from, of, timer, Subject, EMPTY } from 'rxjs'; 
-import { skipWhile, take, takeUntil, takeWhile, scan, expand, map, concatMap,tap} from 'rxjs/operators';
+import { iif, from, of, timer, Subject, EMPTY } from 'rxjs'; 
+import { mergeMap, skipWhile, take, takeUntil, takeWhile, scan, expand, map, concatMap,tap} from 'rxjs/operators';
 console.clear();
 
 function getPagedData(index: number) {
@@ -51,7 +51,7 @@ const expandSrc = of({nextPageIndex: 0}).pipe(
 // expandSrc.subscribe(x => console.log(x));
 
 //Concat all the incoming data
-expandSrc.pipe(
+const expandS = expandSrc.pipe(
   scan((allData, {data}) => {
     if (!data) return allData;
     return [...allData, ...data]
@@ -67,7 +67,8 @@ function getRandom() {
 
 const end$ = new Subject();
 let what = 0;
-getRandom().pipe(
+
+const recursiveFinal = getRandom().pipe(
   expand(numericVal => {
     what++;
     return numericVal === null ? getRandom() : EMPTY;
@@ -75,4 +76,10 @@ getRandom().pipe(
   take(4),
   tap(x => console.log(x,what)),
   skipWhile(result => result === null && what < 3),
-).subscribe(x => console.log('Yes', x), null, () => console.log('complete'));
+)
+
+of(true).pipe(
+  mergeMap(x => iif(() => x, recursiveFinal, expandS))
+)
+
+.subscribe(x => console.log('Yes', x), null, () => console.log('complete'));
