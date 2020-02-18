@@ -21,3 +21,18 @@
  * Cold Observables - A subject that start "running" when the subscription begins.
  * Much more predictive.!
  */
+
+/**
+ * Test Schedulers
+ * getTestSchedulers()
+ * 
+ */
+
+import {of} from 'rxjs';
+import {map} from 'rxjs/operators';
+
+export function multiplyByTen() {
+  return of(1,2,10).pipe(
+    map(x => x*10)
+  )
+}
