@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
+    "jasmine-marbles": "^0.6.0",
     "rxjs": "^6.5.2"
   }
 }
