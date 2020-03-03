@@ -1,5 +1,5 @@
 import { iif, from, of, timer, Subject, EMPTY } from 'rxjs'; 
-import { mergeMap, skipWhile, take, takeUntil, takeWhile, scan, expand, map, concatMap,tap} from 'rxjs/operators';
+import { mergeMap, finalize , skipWhile, take, takeUntil, takeWhile, scan, expand, map, concatMap,tap} from 'rxjs/operators';
 console.clear();
 
 function getPagedData(index: number) {
@@ -83,3 +83,19 @@ of(true).pipe(
 )
 
 .subscribe(x => console.log('Yes', x), null, () => console.log('complete'));
+
+of(null).pipe(
+  expand((status) => {
+    return status === true ? EMPTY : getMachineStatus()
+  }),
+  take(4),
+  finalize(() => console.log('Done'))
+).subscribe();
+
+let s = 0;
+function getMachineStatus() {
+  s++;
+  return timer(500).pipe(
+    map(() => s > 4)
+  )
+}
