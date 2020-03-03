@@ -83,19 +83,3 @@ of(true).pipe(
 )
 
 .subscribe(x => console.log('Yes', x), null, () => console.log('complete'));
-
-of(null).pipe(
-  expand((status) => {
-    return status === true ? EMPTY : getMachineStatus()
-  }),
-  take(4),
-  finalize(() => console.log('Done'))
-).subscribe();
-
-let s = 0;
-function getMachineStatus() {
-  s++;
-  return timer(500).pipe(
-    map(() => s > 4)
-  )
-}
