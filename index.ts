@@ -83,3 +83,7 @@ of(true).pipe(
 )
 
 .subscribe(x => console.log('Yes', x), null, () => console.log('complete'));
+
+(async () => {
+  await import('./try-bson');
+})()
